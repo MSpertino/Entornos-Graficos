@@ -1,5 +1,4 @@
 {
-  "public": "public",
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.7.3"
@@ -7,16 +6,7 @@
   },
   "routes": [
     {
-      "src": "/public/(.*)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/styles.css",
-      "dest": "/public/styles.css"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
