@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alta Especialistas</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../styles.css" rel="stylesheet">
+    <link href="/styles.css" rel="stylesheet">
 </head>
 
 <body>
@@ -41,19 +41,23 @@ if ($result->num_rows > 0) {
                     <div class="form-group">
                         <label for="nombre">Nombre completo</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required placeholder='Nombre Apellido'>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required
+                            placeholder='Nombre Apellido'>
                     </div>
                     <div class="form-group">
                         <label for="email">Email del especialista</label>
-                        <input type="email" class="form-control" id="email" name="email" required placeholder='esp@gmail.com'>
+                        <input type="email" class="form-control" id="email" name="email" required
+                            placeholder='esp@gmail.com'>
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña</label>
-                        <input type="text" class="form-control" id="password" name="password" required placeholder='Esp123'>
+                        <input type="text" class="form-control" id="password" name="password" required
+                            placeholder='Esp123'>
                     </div>
                     <div class="form-group">
                         <label for="repassword">Repita la contraseña</label>
-                        <input type="text" class="form-control" id="repassword" name="repassword" required placeholder='Esp123'>
+                        <input type="text" class="form-control" id="repassword" name="repassword" required
+                            placeholder='Esp123'>
                     </div>
                     <div class="form-group">
                         <label for="tel">Teléfono de contacto</label>
@@ -77,10 +81,10 @@ if ($result->num_rows > 0) {
                         <button type="button" class="btn btn-info mt-2" id="add-dia-btn">Agregar día</button>
                     </div>
                     <script>
-                        document.getElementById('add-dia-btn').addEventListener('click', function() {
+                        document.getElementById('add-dia-btn').addEventListener('click', function () {
                             const container = document.getElementById('dias-container');
                             const index = container.children.length;
-                            const dias = ['Lun','Mar','Mie','Jue','Vie'];
+                            const dias = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie'];
                             const div = document.createElement('div');
                             div.className = 'form-row align-items-end mb-2';
                             div.innerHTML = `
@@ -128,7 +132,7 @@ if ($result->num_rows > 0) {
                             `;
                             container.appendChild(div);
 
-                            div.querySelector('.remove-dia-btn').onclick = function() {
+                            div.querySelector('.remove-dia-btn').onclick = function () {
                                 div.remove();
                             };
 

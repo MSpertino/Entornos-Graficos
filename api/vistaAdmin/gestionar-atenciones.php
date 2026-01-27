@@ -20,7 +20,7 @@ $resMascotas = $conn->query("SELECT id, nombre FROM mascotas ORDER BY nombre ASC
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales/es.js'></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../styles.css" rel="stylesheet">
+    <link href="/styles.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
