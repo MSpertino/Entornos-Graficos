@@ -22,7 +22,7 @@ $paginas_gestion = [
 <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
   <div class="container">
 
-    <a class="navbar-brand d-flex align-items-center" href="/index.php">
+    <a class="navbar-brand d-flex align-items-center" href="../index.php">
       <img src="https://doctoravanevet.com/wp-content/uploads/2020/04/Servicios-vectores-consulta-integral.png"
         alt="Logo" class="mr-2 bg-white rounded-circle p-1" width="45" height="45">
       <span>San Antón</span>
@@ -37,23 +37,23 @@ $paginas_gestion = [
 
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link <?php echo ($pagina_actual == 'index.php') ? 'active' : ''; ?>" href="/index.php"><i
+          <a class="nav-link <?php echo ($pagina_actual == 'index.php') ? 'active' : ''; ?>" href="../index.php"><i
               class="fas fa-home mr-1"></i> Inicio</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link <?php echo ($pagina_actual == 'profesionales.php') ? 'active' : ''; ?>"
-            href="/profesionales.php">Profesionales</a>
+            href="../profesionales.php">Profesionales</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link <?php echo ($pagina_actual == 'nosotros.php') ? 'active' : ''; ?>"
-            href="/nosotros.php">Nosotros</a>
+            href="../nosotros.php">Nosotros</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link <?php echo ($pagina_actual == 'contactanos.php') ? 'active' : ''; ?>"
-            href="/contactanos.php">Contacto</a>
+            href="../contactanos.php">Contacto</a>
         </li>
 
         <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'admin'): ?>
@@ -67,7 +67,7 @@ $paginas_gestion = [
               <h6 class="dropdown-header text-uppercase text-muted small">Panel de Control</h6>
 
               <a class="dropdown-item <?php echo ($pagina_actual == 'gestionar-hospitalizacion.php') ? 'active' : ''; ?>"
-                href="/vistaAdmin/gestionar-hospitalizacion.php">
+                href="../vistaAdmin/gestionar-hospitalizacion.php">
                 <i class="fas fa-procedures mr-2 text-info"></i> Hospitalización
               </a>
 
@@ -75,22 +75,22 @@ $paginas_gestion = [
                 <div class="dropdown-divider"></div>
 
                 <a class="dropdown-item <?php echo ($pagina_actual == 'gestionar-atenciones.php' || $pagina_actual == 'detalle-atencionAP.php') ? 'active' : ''; ?>"
-                  href="/vistaAdmin/gestionar-atenciones.php">
+                  href="../vistaAdmin/gestionar-atenciones.php">
                   <i class="fas fa-notes-medical mr-2 text-success"></i> Atenciones
                 </a>
 
                 <a class="dropdown-item <?php echo ($pagina_actual == 'gestionar-especialistas.php' || $pagina_actual == 'alta-especialista.php' || $pagina_actual == 'detalle-especialista.php') ? 'active' : ''; ?>"
-                  href="/vistaAdmin/gestionar-especialistas.php">
+                  href="../vistaAdmin/gestionar-especialistas.php">
                   <i class="fas fa-user-md mr-2 text-primary"></i> Profesionales
                 </a>
 
                 <a class="dropdown-item <?php echo ($pagina_actual == 'gestionar-clientes.php' || $pagina_actual == 'detalle-cliente.php') ? 'active' : ''; ?>"
-                  href="/vistaAdmin/gestionar-clientes.php">
+                  href="../vistaAdmin/gestionar-clientes.php">
                   <i class="fas fa-users mr-2 text-warning"></i> Clientes
                 </a>
 
                 <a class="dropdown-item <?php echo ($pagina_actual == 'gestionar-mascotas.php' || $pagina_actual == 'agregar-mascota.php' || $pagina_actual == 'detalle-mascota.php') ? 'active' : ''; ?>"
-                  href="/vistaAdmin/gestionar-mascotas.php">
+                  href="../vistaAdmin/gestionar-mascotas.php">
                   <i class="fas fa-paw mr-2 text-danger"></i> Mascotas
                 </a>
               <?php endif; ?>
@@ -120,17 +120,17 @@ $paginas_gestion = [
 
               <?php if ($_SESSION['usuario_tipo'] === 'cliente'): ?>
                 <a class="dropdown-item <?php echo ($pagina_actual == 'mis-turnos.php') ? 'active' : ''; ?>"
-                  href="/vistaCliente/mis-turnos.php">
+                  href="../vistaCliente/mis-turnos.php">
                   <i class="fas fa-calendar-check mr-2 text-primary"></i> Mis Turnos
                 </a>
                 <a class="dropdown-item <?php echo ($pagina_actual == 'mis-mascotas.php') ? 'active' : ''; ?>"
-                  href="/vistaCliente/mis-mascotas.php">
+                  href="../vistaCliente/mis-mascotas.php">
                   <i class="fas fa-dog mr-2 text-warning"></i> Mis Mascotas
                 </a>
                 <div class="dropdown-divider"></div>
               <?php endif; ?>
 
-              <a class="dropdown-item text-danger" href="/logout.php">
+              <a class="dropdown-item text-danger" href="../logout.php">
                 <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
               </a>
             </div>
@@ -138,11 +138,11 @@ $paginas_gestion = [
         <?php else: ?>
           <li class="nav-item">
             <a class="nav-link <?php echo ($pagina_actual == 'iniciar-sesion.php') ? 'active' : ''; ?>"
-              href="/iniciar-sesion.php"><i class="fas fa-sign-in-alt mr-1"></i> Iniciar sesión</a>
+              href="../iniciar-sesion.php"><i class="fas fa-sign-in-alt mr-1"></i> Iniciar sesión</a>
           </li>
           <li class="nav-item ml-2">
             <a class="btn btn-light text-teal font-weight-bold shadow-sm rounded-pill px-4"
-              href="/registrarse.php">Registrarse</a>
+              href="../registrarse.php">Registrarse</a>
           </li>
         <?php endif; ?>
       </ul>
@@ -157,7 +157,7 @@ $paginas_gestion = [
       <ol class="breadcrumb mb-0 p-0" style="background: transparent; font-size: 0.9rem;">
         <?php
 
-        echo '<li class="breadcrumb-item"><a href="/index.php"><i class="fas fa-home"></i> Inicio</a></li>';
+        echo '<li class="breadcrumb-item"><a href="../index.php"><i class="fas fa-home"></i> Inicio</a></li>';
 
         if ($pagina_actual !== 'index.php') {
           $nombres_paginas = [
