@@ -138,7 +138,7 @@ $paginas_gestion = [
         <?php else: ?>
           <li class="nav-item">
             <a class="nav-link <?php echo ($pagina_actual == 'iniciar-sesion.php') ? 'active' : ''; ?>"
-              href="../iniciar-sesion.php"><i class="fas fa-sign-in-alt mr-1"></i> Iniciar sesión</a>
+              href="/iniciar-sesion.php"><i class="fas fa-sign-in-alt mr-1"></i> Iniciar sesión</a>
           </li>
           <li class="nav-item ml-2">
             <a class="btn btn-light text-teal font-weight-bold shadow-sm rounded-pill px-4"
