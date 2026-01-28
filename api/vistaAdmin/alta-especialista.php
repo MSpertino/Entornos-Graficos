@@ -1,167 +1,237 @@
-<?php
-session_start();
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
-// Crear conexión
-$conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
-
-$query = "select id, nombre from especialidad";
-$result = $conn->query($query);
-$especialidades = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $especialidades[] = $row;
-    }
-}
-
-?>
+<?php require_once '../shared/logica_alta_especialista.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alta Especialistas</title>
+    <title>Alta Especialistas - Veterinaria San Antón</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="../styles.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
     <?php require_once '../shared/navbar.php'; ?>
-    <!-- Título -->
-    <div class="container my-4">
-        <h2 class="text-center text-white py-2" style="background-color: #a8d08d;">Alta de Especialistas</h2>
-    </div>
-    <div class="d-flex justify-content-center">
-        <div class="card " style="width:50rem;">
-            <h3 class="card-title text-center">Formulario de alta</h3>
-            <div class="card-body">
-                <form action="../shared/alta-especialista.php" method="POST">
-                    <div class="form-group">
-                        <label for="nombre">Nombre completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required
-                            placeholder='Nombre Apellido'>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email del especialista</label>
-                        <input type="email" class="form-control" id="email" name="email" required
-                            placeholder='esp@gmail.com'>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="text" class="form-control" id="password" name="password" required
-                            placeholder='Esp123'>
-                    </div>
-                    <div class="form-group">
-                        <label for="repassword">Repita la contraseña</label>
-                        <input type="text" class="form-control" id="repassword" name="repassword" required
-                            placeholder='Esp123'>
-                    </div>
-                    <div class="form-group">
-                        <label for="tel">Teléfono de contacto</label>
-                        <input type="text" class="form-control" id="tel" name="tel" required placeholder='1234567890'>
-                    </div>
-                    <div class="form-group">
-                        <label for="esp">Especialidad</label>
-                        <select class="form-control" id="esp" name="esp" required>
-                            <option value="" disabled selected>Seleccione una especialidad</option>
-                            <?php foreach ($especialidades as $especialidad): ?>
-                                <option value="<?php echo htmlspecialchars($especialidad['id']); ?>">
-                                    <?php echo htmlspecialchars($especialidad['nombre']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <!-- Dias de atencion -->
-                    <div class="form-group">
-                        <label>Días de atención y horarios</label>
-                        <div id="dias-container"></div>
-                        <button type="button" class="btn btn-info mt-2" id="add-dia-btn">Agregar día</button>
-                    </div>
-                    <script>
-                        document.getElementById('add-dia-btn').addEventListener('click', function () {
-                            const container = document.getElementById('dias-container');
-                            const index = container.children.length;
-                            const dias = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie'];
-                            const div = document.createElement('div');
-                            div.className = 'form-row align-items-end mb-2';
-                            div.innerHTML = `
-                                <div class="col">
-                                    <select name="dias[${index}][dia]" class="form-control" required>
-                                        <option value="" disabled selected>Día</option>
-                                        ${dias.map(d => `<option value="${d}">${d}</option>`).join('')}
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <select name="dias[${index}][horaInicio]" class="form-control hora-inicio" required>
-                                        <option value="" disabled selected>Hora inicio</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="18:00">18:00</option>
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <select name="dias[${index}][horaFin]" class="form-control hora-fin" required>
-                                        <option value="" disabled selected>Hora fin</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="19:00">19:00</option>
-                                    </select>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-danger btn-sm remove-dia-btn">&times;</button>
-                                </div>
-                            `;
-                            container.appendChild(div);
 
-                            div.querySelector('.remove-dia-btn').onclick = function () {
-                                div.remove();
-                            };
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-teal text-center py-4 text-white">
+                        <h3 class="mb-0 font-weight-bold"><i class="fas fa-user-md mr-2"></i> Nuevo Especialista</h3>
+                        <p class="mb-0 text-white-50">Registrar un nuevo profesional en el sistema</p>
+                    </div>
+                    <div class="card-body p-5">
+                        <form action="../shared/alta-especialista.php" method="POST" id="formAlta">
+                            <h5 class="text-teal mb-3 border-bottom pb-2"><i class="fas fa-id-card mr-2"></i> Datos
+                                Personales</h5>
 
-                            // Validar hora fin > hora inicio
-                            const horaInicio = div.querySelector('.hora-inicio');
-                            const horaFin = div.querySelector('.hora-fin');
+                            <div class="form-group">
+                                <label class="font-weight-bold small text-muted">Nombre Completo</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span
+                                            class="input-group-text bg-white border-right-0"><i
+                                                class="fas fa-user text-teal"></i></span></div>
+                                    <input type="text" class="form-control border-left-0" name="nombre" required
+                                        placeholder="Ej: Dr. Juan Pérez">
+                                </div>
+                            </div>
 
-                            function validarHoras() {
-                                if (horaInicio.value && horaFin.value && horaFin.value <= horaInicio.value) {
-                                    horaFin.setCustomValidity('La hora de fin debe ser mayor que la hora de inicio');
-                                } else {
-                                    horaFin.setCustomValidity('');
-                                }
-                            }
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold small text-muted">Email Profesional</label>
+                                        <div class="input-group" id="grupo-email">
+                                            <div class="input-group-prepend"><span
+                                                    class="input-group-text bg-white border-right-0"><i
+                                                        class="fas fa-envelope text-teal"></i></span></div>
+                                            <input type="email" class="form-control border-left-0" id="email"
+                                                name="email" required placeholder="dr.juan@vet.com">
+                                        </div>
+                                        <div class="invalid-feedback font-weight-bold" id="error-email">Este correo
+                                            electrónico ya está registrado.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold small text-muted">Teléfono</label>
+                                        <div class="input-group" id="grupo-tel">
+                                            <div class="input-group-prepend"><span
+                                                    class="input-group-text bg-white border-right-0"><i
+                                                        class="fas fa-phone text-teal"></i></span></div>
+                                            <input type="text" class="form-control border-left-0" id="tel" name="tel"
+                                                required placeholder="Ej: 1156781234" maxlength="10">
+                                        </div>
+                                        <div class="invalid-feedback font-weight-bold" id="error-tel">El teléfono debe
+                                            contener 10 números válidos.</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            horaInicio.addEventListener('change', validarHoras);
-                            horaFin.addEventListener('change', validarHoras);
-                        });
-                    </script>
-                    </script>
-                    <button type="submit" class="btn btn-primary">Registrar Especialista</button>
-                </form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold small text-muted">Contraseña</label>
+                                        <div class="input-group" id="grupo-pass">
+                                            <div class="input-group-prepend"><span
+                                                    class="input-group-text bg-white border-right-0"><i
+                                                        class="fas fa-lock text-teal"></i></span></div>
+                                            <input type="password" class="form-control border-left-0" id="password"
+                                                name="password" required placeholder="******">
+                                        </div>
+                                        <div class="invalid-feedback font-weight-bold" id="error-pass">Debe tener 8
+                                            caracteres, 1 mayúscula y 1 número.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="font-weight-bold small text-muted">Repetir Contraseña</label>
+                                        <div class="input-group" id="grupo-repass">
+                                            <div class="input-group-prepend"><span
+                                                    class="input-group-text bg-white border-right-0"><i
+                                                        class="fas fa-lock text-teal"></i></span></div>
+                                            <input type="password" class="form-control border-left-0" id="repassword"
+                                                name="repassword" required placeholder="******">
+                                        </div>
+                                        <div class="invalid-feedback font-weight-bold" id="error-repass">Las contraseñas
+                                            no coinciden.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="text-teal mt-4 mb-3 border-bottom pb-2"><i
+                                    class="fas fa-briefcase-medical mr-2"></i> Perfil Profesional</h5>
+
+                            <div class="form-group">
+                                <label class="font-weight-bold small text-muted">Especialidad</label>
+                                <select class="form-control custom-select" name="esp" required>
+                                    <option value="" disabled selected>Seleccione una especialidad</option>
+                                    <?php foreach ($especialidades as $esp): ?>
+                                        <option value="<?= htmlspecialchars($esp['id']) ?>">
+
+
+                                            <?= htmlspecialchars($esp['nombre']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+                                <span class="text-teal font-weight-bold"><i class="far fa-clock mr-2"></i>
+                                    Disponibilidad Horaria</span>
+                                <button type="button"
+                                    class="btn btn-sm btn-outline-success rounded-pill font-weight-bold"
+                                    id="add-dia-btn"><i class="fas fa-plus mr-1"></i> Agregar Día</button>
+                            </div>
+
+                            <div id="dias-container">
+                                <div class="text-center text-muted py-3 empty-state"><small>No se han asignado horarios
+                                        aún.</small></div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <div class="d-flex justify-content-between">
+                                <a href="gestionar-especialistas.php"
+                                    class="btn btn-outline-secondary px-4">Cancelar</a>
+                                <button type="submit" class="btn btn-success px-5 font-weight-bold shadow-sm"
+                                    id="btn-submit">Registrar Especialista</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#email').on('blur', function () {
+                var email = $(this).val();
+                if (email.length > 0) {
+                    $.post(window.location.href, { check_email: true, email: email }, function (res) {
+                        if (res.exists) {
+                            $('#email').addClass('is-invalid');
+                            $('#error-email').show();
+                            $('#btn-submit').prop('disabled', true);
+                        } else {
+                            $('#email').removeClass('is-invalid');
+                            $('#error-email').hide();
+                            $('#btn-submit').prop('disabled', false);
+                        }
+                    }, 'json');
+                }
+            });
+
+            $('#tel').on('input', function () {
+                var valid = /^\d{10}$/.test($(this).val());
+                $(this).toggleClass('is-invalid', !valid);
+                $('#error-tel').toggle(!valid);
+            });
+
+            $('#password').on('input', function () {
+                var valid = /^(?=.*[A-Z])(?=.*\d).{8,}$/.test($(this).val());
+                $(this).toggleClass('is-invalid', !valid);
+                $('#error-pass').toggle(!valid);
+                $('#repassword').trigger('input');
+            });
+
+            $('#repassword').on('input', function () {
+                var valid = $(this).val() === $('#password').val() && $(this).val().length > 0;
+                $(this).toggleClass('is-invalid', !valid);
+                $('#error-repass').toggle(!valid);
+            });
+
+            $('#formAlta').on('submit', function (e) {
+                if ($('.is-invalid').length > 0 || !this.checkValidity()) {
+                    e.preventDefault();
+                    alert("Por favor corrija los errores antes de enviar.");
+                }
+            });
+
+            $('#add-dia-btn').click(function () {
+                $('#dias-container .empty-state').hide();
+                let idx = $('.day-row').length;
+                let dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+                let opts = dias.map(d => `<option value="${d.substring(0, 3)}">${d}</option>`).join('');
+                let horas = '';
+                for (let i = 8; i <= 20; i++) { let h = (i < 10 ? '0' : '') + i; horas += `<option value="${h}:00">${h}:00</option>`; }
+
+                let row = $(`
+                    <div class="day-row shadow-sm mb-2 p-2 bg-white rounded border">
+                        <div class="form-row align-items-center">
+                            <div class="col-md-4"><select name="dias[${idx}][dia]" class="form-control" required><option disabled selected>Día</option>${opts}</select></div>
+                            <div class="col-md-3"><select name="dias[${idx}][horaInicio]" class="form-control hora-ini" required><option disabled selected>Inicio</option>${horas}</select></div>
+                            <div class="col-md-3"><select name="dias[${idx}][horaFin]" class="form-control hora-fin" required><option disabled selected>Fin</option>${horas}</select></div>
+                            <div class="col-md-2 text-right"><button type="button" class="btn btn-outline-danger btn-sm rounded-circle rm-btn"><i class="fas fa-trash-alt"></i></button></div>
+                        </div>
+                    </div>
+                `);
+
+                row.find('.rm-btn').click(function () {
+                    row.remove();
+                    if ($('.day-row').length === 0) $('.empty-state').show();
+                });
+
+                row.find('select').change(function () {
+                    let ini = row.find('.hora-ini').val();
+                    let fin = row.find('.hora-fin').val();
+                    if (ini && fin && fin <= ini) {
+                        row.find('.hora-fin').addClass('is-invalid');
+                        alert('La hora de fin debe ser mayor.');
+                    } else {
+                        row.find('.hora-fin').removeClass('is-invalid');
+                    }
+                });
+
+                $('#dias-container').append(row);
+            });
+        });
+    </script>
     <?php require_once '../shared/footer.php'; ?>
 </body>
 

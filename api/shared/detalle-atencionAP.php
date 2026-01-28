@@ -1,49 +1,27 @@
 <?php
 session_start();
 
-// Validación de sesión corregida
-if (!isset($_SESSION['usuario_tipo']) || ($_SESSION['usuario_tipo'] !== 'admin' && $_SESSION['usuario_tipo'] !== 'especialista')) {
+// Validación de sesión
+if (!isset($_SESSION['usuario_tipo']) || !in_array($_SESSION['usuario_tipo'], ['admin', 'especialista'])) {
     header('Location: ../index.php');
     exit();
 }
 
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
+// 1. Importamos la conexión y las consultas
+require_once '../shared/db.php';
+require_once '../shared/consultas_atenciones.php';
 
-$conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
+$idAtencion = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($idAtencion <= 0)
+    die("ID no válido.");
 
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-}
+// 2. Traemos los datos usando la función externa
+$atencion = obtenerDetalleAtencion($conn, $idAtencion);
 
-// Validamos que exista el ID en la URL
-if (!isset($_GET['id'])) {
-    die("ID de atención no proporcionado.");
-}
-
-$idAtencion = intval($_GET['id']);
-
-$query = "SELECT a.id, 
-                m.nombre as nombreMascota,
-                m.id as idMascota,
-                s.nombre as nombreServicio,
-                a.fecha,
-                a.detalle,
-                u.nombre as nombrePro,
-                u.id as idPro
-        FROM atenciones a
-        INNER JOIN mascotas m on a.id_mascota = m.id
-        INNER JOIN servicios s on a.id_serv = s.id
-        INNER JOIN usuarios u on a.id_pro = u.id
-        WHERE a.id = $idAtencion";
-
-$result = $conn->query($query);
-$atencion = $result->fetch_assoc();
-
-if (!$atencion) {
+if (!$atencion)
     die("Atención no encontrada.");
-}
+
+$esAdmin = ($_SESSION['usuario_tipo'] === 'admin');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -51,75 +29,100 @@ if (!$atencion) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle Atención</title>
+    <title>Ficha Médica #<?= $atencion['id']; ?> - San Antón</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="/styles.css" rel="stylesheet">
+    <link href="../styles.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
     <?php require_once '../shared/navbar.php'; ?>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-center">
-            <div class="card text-center" style="width:50rem;">
-                <div class="card-header bg-info text-white">
-                    <h2 class="mb-0">Detalle de la atención de
-                        <?php echo htmlspecialchars($atencion['nombreMascota']) ?>
-                    </h2>
+    <div class="container mt-5 mb-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0 mb-4">
+                <li class="breadcrumb-item"><a href="../vistaAdmin/gestionar-atenciones.php">Atenciones</a></li>
+                <li class="breadcrumb-item active">Ficha #<?= $atencion['id']; ?></li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="ficha-medica p-5">
+                    <div class="d-flex justify-content-between align-items-start mb-4 border-bottom pb-3">
+                        <div>
+                            <h2 class="mb-0 text-teal font-weight-bold">Reporte de Atención</h2>
+                            <span class="badge badge-info px-3 py-2 mt-2" style="font-size: 0.9rem;">
+                                <?= htmlspecialchars($atencion['nombreServicio']) ?>
+                            </span>
+                        </div>
+                        <div class="text-right">
+                            <h5 class="text-muted mb-0"><?= date('d/m/Y', strtotime($atencion['fecha'])); ?></h5>
+                            <small class="text-muted"><?= date('H:i', strtotime($atencion['fecha'])); ?> hs</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="label-dato">Paciente</div>
+                            <div class="valor-dato font-weight-bold">
+                                <?= htmlspecialchars($atencion['nombreMascota']) ?>
+                                <small
+                                    class="text-muted font-weight-normal">(<?= htmlspecialchars($atencion['raza'] ?? '') ?>)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="label-dato">Profesional a Cargo</div>
+                            <div class="valor-dato">Dr/a. <?= htmlspecialchars($atencion['nombrePro']) ?></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <div class="label-dato">Observaciones / Diagnóstico</div>
+                        <div class="p-3 bg-light rounded border" style="min-height: 150px;">
+                            <?= nl2br(htmlspecialchars($atencion['detalle'])); ?>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <h5 class="card-title font-weight-bold">Nombre del Servicio:</h5>
-                        <p class="card-text text-secondary"><?php echo htmlspecialchars($atencion['nombreServicio']) ?>
-                        </p>
-                    </div>
-                    <div class="mb-4">
-                        <h5 class="card-title font-weight-bold">Fecha de la Atención:</h5>
-                        <p class="card-text text-secondary">
-                            
+            </div>
 
-                                                    <?php echo date('d/m/Y H:i', strtotime($atencion['fecha'])); ?></p>
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-white font-weight-bold text-secondary">
+                        <i class="fas fa-cogs mr-2"></i> Acciones
                     </div>
-                    <div class="mb-4">
-                        <h5 class="card-title font-weight-bold">Detalles de la Atención:</h5>
-                        <p class="card-text text-secondary"><?php echo nl2br(htmlspecialchars($atencion['detalle'])); ?>
-                        </p>
-                    </div>
-                    <div class="mb-4">
-                        <h5 class="card-title font-weight-bold">Nombre del Profesional:</h5>
-                        <p class="card-text text-secondary"><?php echo htmlspecialchars($atencion['nombrePro']) ?></p>
-                    </div>
+                    <div class="card-body">
+                        <?php if ($esAdmin): ?>
+                            <button type="button" class="btn btn-warning btn-block font-weight-bold mb-3 shadow-sm"
+                                data-toggle="modal" data-target="#editarAtencionModal">
+                                <i class="fas fa-edit mr-2"></i> Editar Informe
+                            </button>
+                            <div class="border-top pt-3 mb-3"></div>
+                        <?php endif; ?>
 
-                    <hr>
-
-                    <div class="d-flex flex-wrap justify-content-center" style="gap: 10px;">
-                        <a href="../vistaAdmin/gestionar-atenciones.php" class="btn btn-outline-dark">
-                            <i class="fas fa-calendar-alt"></i> Ir al Calendario
+                        <a href="../shared/detalle-mascota.php?idMascota=<?= $atencion['idMascota']; ?>"
+                            class="btn btn-outline-info btn-block mb-2">
+                            <i class="fas fa-paw mr-2"></i> Ver Historia Clínica
                         </a>
 
-                        <a href="../shared/detalle-mascota.php?idMascota=<?php echo $atencion['idMascota']; ?>"
-                            class="btn btn-outline-primary">
-                            <i class="fas fa-paw"></i> Ir a Mascota
+                        <a href="../vistaAdmin/detalle-especialista.php?id=<?= $atencion['idPro']; ?>"
+                            class="btn btn-outline-secondary btn-block mb-2">
+                            <i class="fas fa-user-md mr-2"></i> Perfil Profesional
                         </a>
 
-                        <a href="../vistaAdmin/detalle-especialista.php?id=<?php echo $atencion['idPro']; ?>"
-                            class="btn btn-outline-success">
-                            <i class="fas fa-user-md"></i> Ir a Especialista
-                        </a>
-
-                        <button type="button" class="btn btn-warning" data-toggle="modal"
-                            data-target="#editarAtencionModal">
-                            Editar Atención
-                        </button>
-
-                    <?php if (strtotime($atencion['fecha']) < time()): ?>
-                            <button class="btn btn-danger disabled"
-                                    title="No se puede eliminar una atención pasada">Eliminar</button>
-                    <?php else: ?>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar">
-                                Eliminar
+                        <?php if ($esAdmin): ?>
+                            <div class="border-top pt-3 mb-3"></div>
+                            <?php if (strtotime($atencion['fecha']) < time()): ?>
+                                <button class="btn btn-light btn-block text-muted" disabled>
+                                    <i class="fas fa-lock mr-2"></i> Eliminar (Bloqueado)
                                 </button>
+                                <small class="text-center d-block text-muted mt-1">No se puede borrar historial pasado.</small>
+                            <?php else: ?>
+                                <button type="button" class="btn btn-outline-danger btn-block" data-toggle="modal"
+                                    data-target="#modalEliminar">
+                                    <i class="fas fa-trash-alt mr-2"></i> Cancelar Turno
+                                </button>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -127,63 +130,10 @@ if (!$atencion) {
         </div>
     </div>
 
-    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Confirmar Eliminación</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
-                </div>
-                <div class="modal-body text-center">
-                    <i class="fas fa-trash-alt text-danger fa-3x mb-3"></i>
-                    <p class="lead">¿Estás seguro de que deseas eliminar esta atención?</p>
-                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <form action="../shared/eliminar-atencion.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?php echo $atencion['id']; ?>">
-                        <button type="submit" class="btn btn-danger">Confirmar Borrado</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editarAtencionModal" tabindex="-1" role="dialog"
-        aria-labelledby="editarAtencionModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content text-left">
-                <form action="../shared/editar-atencion.php" method="POST">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editarAtencionModalLabel">Editar Detalles de Atención</h5>
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="id" value="<?php echo $atencion['id']; ?>">
-                        <div class="form-group">
-                            <label for="fecha">Fecha y Hora</label>
-                            <input type="datetime-local" class="form-control" id="fecha" name="fecha"
-                                value="<?php echo date('Y-m-d\TH:i', strtotime($atencion['fecha'])); ?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="detalle">Observaciones</label>
-                            <textarea class="form-control" id="detalle" name="detalle" rows="4"
-                                required><?php echo htmlspecialchars($atencion['detalle']); ?></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <?php require_once '../shared/modales_atencion.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <?php require_once '../shared/footer.php'; ?>
 </body>
 

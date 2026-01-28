@@ -13,7 +13,7 @@ if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'especiali
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Veterinaria San Antón</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/styles.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
 </head>
 
 <body>
@@ -24,17 +24,9 @@ if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'especiali
     </script>
   <?php endif; ?>
 
-  <!-- Navegación -->
   <?php require_once 'shared/navbar.php'; ?>
 
-  <!-- Encabezado -->
-  <?php if (isset($_SESSION['usuario_nombre'])): ?>
-    <h2 class="text-center my-4" style="background-color: #a8d08d; width:100%">Vista de tipo:
-      <?php echo $_SESSION['usuario_tipo']; ?>
-    </h2>
-  <?php endif; ?>
-
-  <header class="container text-center my-4">
+  <header class="container-fluid text-center p-4 mb-4" style="background-color: #00897b;">
     <div class="row">
       <div class="col">
         <div class="header-images">
@@ -47,48 +39,46 @@ if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'especiali
             src="https://media.istockphoto.com/id/1353103116/es/foto/veterinario-examinando-lindo-perro-pug-y-gato-en-la-cl%C3%ADnica-primer-plano-d%C3%ADa-de-vacunaci%C3%B3n.jpg?s=612x612&w=0&k=20&c=y8RP8tBmuAApVU6Ga6OkizZoAnuHHjimBgtSRoAJBEI="
             alt="Mascota 3" class="img-fluid header-img">
         </div>
-        <p class="lead">Somos la mejor veterinaria de tu ciudad, conoce nuestros servicios y trae a tu mascota</p>
       </div>
     </div>
   </header>
 
-  <!-- Sección de Autogestión de Turnos -->
   <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] === 'cliente'): ?>
-    <section class="container text-center my-4">
-      <h3>Autogestión de Turnos</h3>
-      <p>Solicita y administra tus turnos de forma rápida y sencilla.</p>
-      <a href="vistaCliente/autogestion-turnos.php" class="btn btn-primary">Acceder</a>
+    <section class="container my-4">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 bg-green text-center">
+            <div class="card-body">
+              <h3 class="card-title text-white">Autogestión de Turnos</h3>
+              <p class="card-text text-white">Solicita y administra tus turnos de forma rápida y sencilla.</p>
+              <a href="vistaCliente/autogestion-turnos.php" class="btn btn-light font-weight-bold"
+                style="color: #00897b;">
+                Acceder
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   <?php endif; ?>
 
-  <!-- Franja Verde -->
-  <section class="bg-green text-white py-2 text-center">
+  <section class="bg-green py-3 text-center my-4">
     <div class="container">
-      <p class="mb-0">Somos la mejor veterinaria de tu ciudad, conoce nuestros servicios y trae a tu mascota</p>
+      <p class="mb-0" style="font-size: 1.1em; font-weight: bold;">
+        Somos la mejor veterinaria de tu ciudad, conoce nuestros servicios y trae a tu mascota
+      </p>
     </div>
   </section>
 
-  <!-- Sección de Bienvenida -->
   <section class="container my-4">
-    <div class="row">
+    <div class="row justify-content-center">
       <div class="col-md-8">
-        <p>Desde su apertura en 1986 la veterinaria San Antón se dedicó a brindar servicios y productos de primerísima
-          calidad para vos y tus mascotas, para ello contamos con los mejores profesionales y con equipamiento médico de
-          última generación.</p>
+        <p style="font-size: 1.4em; text-align: center;">
+          Desde su apertura en 1986 la veterinaria San Antón se dedicó a brindar servicios y
+          productos de primerísima calidad para vos y tus mascotas, para ello contamos con los
+          mejores profesionales y con equipamiento médico de última generación.
+        </p>
       </div>
-      <div class="col-md-4">
-        <p>Encontranos en:</p>
-        <img
-          src="https://st2.depositphotos.com/4242631/6430/v/450/depositphotos_64302369-stock-illustration-map-icon-with-pin-pointer.jpg"
-          alt="Mapa" class="img-fluid">
-      </div>
-    </div>
-  </section>
-
-  <!-- Franja Verde -->
-  <section class="bg-green text-white py-2 text-center">
-    <div class="container">
-      <p class="mb-0">Teléfono de contacto: 115673346 | Mail: sananton24@gmail.com</p>
     </div>
   </section>
 

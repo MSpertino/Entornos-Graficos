@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_serv = intval($_POST['servicio_id']);
     $fecha_hora = $fecha . ' ' . $hora . ':00';
 
-    // Validación de seguridad (Especialista ocupado)
+
     $check = $conn->prepare("SELECT id FROM atenciones WHERE id_pro = ? AND fecha = ?");
     $check->bind_param("is", $id_pro, $fecha_hora);
     $check->execute();
@@ -23,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Validación: Mascota no tenga turno en ese horario
     $check_mascota = $conn->prepare("SELECT id FROM atenciones WHERE id_mascota = ? AND fecha = ?");
     $check_mascota->bind_param("is", $id_mascota, $fecha_hora);
     $check_mascota->execute();
@@ -33,8 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO atenciones (id_mascota, id_serv, id_pro, fecha, detalle) VALUES (?, ?, ?, ?, 'Atención programada')");
-    $stmt->bind_param("iiis", $id_mascota, $id_serv, $id_pro, $fecha_hora);
+    $detalle = "";
+
+    $stmt = $conn->prepare("INSERT INTO atenciones (id_mascota, id_serv, id_pro, fecha, detalle) VALUES (?, ?, ?, ?, ?)");
+
+    $stmt->bind_param("iiiss", $id_mascota, $id_serv, $id_pro, $fecha_hora, $detalle);
 
     if ($stmt->execute()) {
         header("Location: ../vistaAdmin/gestionar-atenciones.php?res=ok");
@@ -42,3 +44,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error: " . $conn->error;
     }
 }
+?>
