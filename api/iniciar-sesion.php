@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario_id'] = $row['id'];
         $_SESSION['usuario_nombre'] = $row['nombre'];
         $_SESSION['usuario_tipo'] = $row['tipo'];
-
+        session_write_close();
         header("Location: index.php");
         exit();
       } else {
