@@ -4,11 +4,7 @@ header('Content-Type: application/json; charset=utf-8');
 error_reporting(0);
 ini_set('display_errors', 0);
 
-require '../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
-
-$conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
+require_once __DIR__ . '/db.php';
 
 if ($conn->connect_error) {
   ob_end_clean();

@@ -16,10 +16,7 @@ $servicios = [];
 $mascotas = [];
 
 if ($modo === 'especialista' && $profesionalId) {
-    require_once '../vendor/autoload.php';
-    $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-    $dotenv->load();
-    $conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
+    require_once __DIR__ . '/db.php';
 
     $stmt = $conn->prepare("SELECT s.id, s.nombre FROM servicios s INNER JOIN especialidad esp ON esp.id = s.id_esp INNER JOIN profesionales p ON p.id_esp = esp.id WHERE p.id = ?");
     $stmt->bind_param('i', $profesionalId);

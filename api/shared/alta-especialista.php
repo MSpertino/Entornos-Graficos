@@ -1,17 +1,8 @@
 <?php
-require '../vendor/autoload.php';
+session_start();
 
-try {
-    $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__)); // Cambiar la ruta al directorio raíz
-    $dotenv->load();
-} catch (Dotenv\Exception\InvalidPathException $e) {
-    die("Error: No se pudo cargar el archivo .env. Verifica su existencia.");
-}
+require_once __DIR__ . '/db.php';
 
-$conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
     $email = $_POST['email'];
