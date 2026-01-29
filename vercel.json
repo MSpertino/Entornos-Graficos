@@ -5,10 +5,8 @@
     }
   },
   "routes": [
-    { "handle": "filesystem" },
     {
-      "src": "/iniciar-sesion.php",
-      "dest": "/api/iniciar-sesion.php"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",

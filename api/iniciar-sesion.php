@@ -1,9 +1,9 @@
 <?php
 session_start();
-require __DIR__ . '/../vendor/autoload.php';
+require 'vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../');
-$dotenv->safeLoad();
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
 if ($conn->connect_error) {
