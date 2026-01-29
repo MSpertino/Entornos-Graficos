@@ -1,22 +1,7 @@
 <?php
 session_start();
 
-require __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../');
-$dotenv->safeLoad();
-
-
-$host = getenv('servername');
-$user = getenv('username');
-$pass = getenv('password');
-$db = getenv('dbname');
-
-
-$conn = new mysqli(getenv('servername'), getenv('username'), getenv('password'), getenv('dbname'));
-
-if ($conn->connect_error) {
-  die("Error de conexión: " . $conn->connect_error);
-}
+require_once __DIR__ . '/db.php';
 
 $error = "";
 
