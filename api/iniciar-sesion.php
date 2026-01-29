@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 
 require_once __DIR__ . '/shared/db.php';
@@ -6,8 +7,8 @@ require_once __DIR__ . '/shared/db.php';
 $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : null;
-  $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : null;
+  $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+  $password = isset($_POST['password']) ? $_POST['password'] : null;
 
   if ($email && $password) {
     $sql = "SELECT id, nombre, tipo, password FROM usuarios WHERE email = ?";
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario_id'] = $row['id'];
         $_SESSION['usuario_nombre'] = $row['nombre'];
         $_SESSION['usuario_tipo'] = $row['tipo'];
-
+        session_write_close();
         header("Location: index.php");
         exit();
       } else {
