@@ -1,12 +1,17 @@
 {
   "functions": {
-    "api/*.php": {
+    "api/**/*.php": {
       "runtime": "vercel-php@0.7.3"
     }
   },
   "routes": [
     {
-      "handle": "filesystem"
+      "src": "/styles.css",
+      "dest": "/api/styles.css"
+    },
+    {
+      "src": "/shared/(.*)",
+      "dest": "/api/shared/$1"
     },
     {
       "src": "/(.*).php",
