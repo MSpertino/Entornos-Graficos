@@ -9,7 +9,7 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Veterinaria San Antón - Buscar Profesionales</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/styles.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,6 +18,7 @@ session_start();
   <div class="container my-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
+
         <div class="card bg-green mb-3 border-0 shadow-sm">
           <div class="card-header text-center border-0">
             <h3>Buscar Profesionales</h3>
@@ -35,6 +36,7 @@ session_start();
             </form>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -43,12 +45,12 @@ session_start();
   if (isset($_GET['search'])) {
     $search = $_GET['search'];
 
-    require __DIR__ . '/../vendor/autoload.php';
+    require 'vendor/autoload.php';
 
-    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../');
-    $dotenv->safeLoad();
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
 
-    $conn = new mysqli(getenv('servername'), getenv('username'), getenv('password'), getenv('dbname'));
+    $conn = new mysqli($_ENV['servername'], $_ENV['username'], $_ENV['password'], $_ENV['dbname']);
     if ($conn->connect_error) {
       die("Error de conexión: " . $conn->connect_error);
     }
@@ -66,9 +68,11 @@ session_start();
 
     if ($result->num_rows > 0) {
       echo "<div class='container mb-5'>";
+
       echo "<div class='bg-green p-3 mb-3 rounded text-center shadow-sm'>
               <h3 class='mb-0 text-white'>Resultados de la búsqueda</h3>
             </div>";
+
       echo "<ul class='list-group shadow-sm'>";
       while ($row = $result->fetch_assoc()) {
         echo "<li class='list-group-item'>
@@ -80,6 +84,7 @@ session_start();
               </li>";
       }
       echo "</ul></div>";
+
     } else {
       echo "<div class='container text-center mb-5'>
               <div class='bg-green p-3 rounded text-white shadow-sm'>
