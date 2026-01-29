@@ -25,7 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario_nombre'] = $row['nombre'];
         $_SESSION['usuario_tipo'] = $row['tipo'];
         session_write_close();
-        header("Location: index.php");
+        echo "<script>
+                localStorage.setItem('login', 'success');
+                window.location.href = 'index.php';
+              </script>";
         exit();
       } else {
         $error = "Contraseña incorrecta.";
