@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <?php require_once '../shared/navbar.php'; ?>
+  <?php require_once __DIR__ . '/../shared/navbar.php'; ?>
 
   <div class="container mt-5 mb-5">
     <div class="bg-green p-4 rounded text-white text-center shadow-sm mb-4">
@@ -135,7 +135,7 @@
       });
     });
   </script>
-  <?php require_once '../shared/footer.php'; ?>
+  <?php require_once __DIR__ . '/../shared/footer.php'; ?>
 </body>
 
 </html>

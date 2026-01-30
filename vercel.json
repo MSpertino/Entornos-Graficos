@@ -6,12 +6,20 @@
   },
   "routes": [
     {
-      "src": "/api/shared/(.*)",
-      "dest": "/api/shared/$1"
+      "src": "/styles.css",
+      "dest": "/api/styles.css"
+    },
+    {
+      "src": "/vistaCliente/(.*).php",
+      "dest": "/api/vistaCliente/$1.php"
+    },
+    {
+      "src": "/(.*).php",
+      "dest": "/api/$1.php"
     },
     {
       "src": "/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/index.php"
     }
   ]
 }
