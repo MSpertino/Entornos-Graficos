@@ -3,7 +3,7 @@
 if (session_status() === PHP_SESSION_NONE) {
   session_set_cookie_params([
     'path' => '/',
-    'sameattr' => 'Lax'
+    'samesite' => 'Lax'
   ]);
   session_start();
 }

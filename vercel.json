@@ -6,6 +6,10 @@
   },
   "routes": [
     {
+      "src": "/vistaCliente/(.*).php",
+      "dest": "/api/vistaCliente/$1.php"
+    },
+    {
       "src": "/(.*).php",
       "dest": "/api/$1.php"
     },
