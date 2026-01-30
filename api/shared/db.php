@@ -1,10 +1,9 @@
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
-  session_set_cookie_params([
-    'path' => '/',
-    'samesite' => 'Lax'
-  ]);
+
+  ini_set('session.cookie_path', '/');
+  ini_set('session.cookie_domain', $_SERVER['HTTP_HOST']);
   session_start();
 }
 
