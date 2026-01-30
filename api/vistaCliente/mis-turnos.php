@@ -1,4 +1,4 @@
-<?php require_once '../shared/logica_mis_turnos.php'; ?>
+<?php require_once __DIR__ . '/../shared/logica_mis_turnos.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 
